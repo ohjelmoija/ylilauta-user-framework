@@ -43,7 +43,6 @@ class Yliscript {
   _isScriptEnabled() {
     if (!this._isStorageCreated()) {
       this._createStorage();
-
       return true;
     }
 
