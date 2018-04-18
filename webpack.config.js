@@ -5,5 +5,6 @@ module.exports = {
   output: {
     filename: 'ylilauta-user-framework.min.js',
     path: path.resolve(__dirname, 'build')
-  }
+  },
+  mode: 'production'
 };

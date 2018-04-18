@@ -5,7 +5,8 @@
   "main": "ylilauta-userscripts-pack.user.js",
   "scripts": {
     "precommit": "pretty-quick --staged",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "webpack --config webpack.config.js"
   },
   "author": "",
   "license": "ISC",
