@@ -1,6 +1,6 @@
 const LOCALSTORAGE_KEY = 'ylilauta-userscripts-pack';
 
-export default class Yliscript {
+class Yliscript {
   constructor(scriptName, main = null) {
     this.scriptName = scriptName;
     this.main = main;
@@ -23,6 +23,14 @@ export default class Yliscript {
     }
 
     this._runScript();
+  }
+
+  listenNewReplies(callback) {
+    const observer = new MutationObserver(callback);
+
+    if ($('.answers')[0]) {
+      observer.observe($('.answers')[0], { childList: true });
+    }
   }
 
   _runScript() {
@@ -192,13 +200,5 @@ export default class Yliscript {
       '%c Ylilauta.fi: pack loaded ',
       'background: #000; color: #0f0'
     );
-  }
-
-  listenNewReplies(callback) {
-    const observer = new MutationObserver(callback);
-
-    if ($('.answers')[0]) {
-      observer.observe($('.answers')[0], { childList: true });
-    }
   }
 }
