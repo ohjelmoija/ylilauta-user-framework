@@ -147,7 +147,7 @@ class Yliscript {
 
   _addPreferenceTab() {
     const preferenceTab = $(
-      '<li class="tab" data-tabid="userscripts">User scripts</li>'
+      '<li class="tab" data-tabid="userscripts">Käyttäjäskriptit</li>'
     );
     preferenceTab.on('click', function() {
       // eslint-disable-next-line no-undef, yboard.js defined
@@ -160,7 +160,7 @@ class Yliscript {
   _addPreferenceWrapper() {
     const preferenceWrapper = $(
       `<div id="userscripts" class="tab" style="display: none">
-        <h3>JavaScript user scripts</h3>
+        <h3>JavaScript-käyttäjäskriptit</h3>
         <p>Huom! Skriptit eivät käynnisty/sammu ilman sivujen uudelleenpäivitystä.</p>
       </div>`
     );
