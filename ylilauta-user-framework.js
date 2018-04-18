@@ -9,6 +9,14 @@ class Yliscript {
     this._run();
   }
 
+  listenNewReplies(callback) {
+    const observer = new MutationObserver(callback);
+
+    if ($('.answers')[0]) {
+      observer.observe($('.answers')[0], { childList: true });
+    }
+  }
+
   _run() {
     if (!this.main) {
       return this._error(
@@ -25,14 +33,6 @@ class Yliscript {
     }
 
     this._runScript();
-  }
-
-  listenNewReplies(callback) {
-    const observer = new MutationObserver(callback);
-
-    if ($('.answers')[0]) {
-      observer.observe($('.answers')[0], { childList: true });
-    }
   }
 
   _runScript() {
