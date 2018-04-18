@@ -2,7 +2,7 @@
 
 Kehikko, jonka tarkoituksena on auttaa Ylilaudalle käyttäjäskriptien tekijöitä keskittymään ominaisuuksien luontiin.
 
-## Käyttö
+## Alkuun pääseminen
 
 YUF on helppo ottaa käyttöön seuraavalla tavalla.
 
@@ -48,3 +48,7 @@ new Yliscript('Riko kaikki', () => {
   breakEverything();
 });
 ```
+
+---
+
+![Kuva Ylilaudan asetuksista](https://raw.githubusercontent.com/ohjelmoija/ylilauta-user-framework/master/docs/preferences.png)

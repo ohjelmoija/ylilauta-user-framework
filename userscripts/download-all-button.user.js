@@ -59,7 +59,7 @@ function addButton() {
       click: () => downloadAll()
     }
   });
-  
+
   $('.buttons_right').prepend(downloadAllButton);
 }
 
