@@ -2,7 +2,7 @@
 // @name Ylilauta: Koodinväritys
 // @namespace Violentmonkey Scripts
 // @match *://ylilauta.org/*
-// @require https://gitcdn.xyz/repo/ohjelmoija/ylilauta-user-framework/master/ylilauta-user-framework.js
+// @require https://raw.githubusercontent.com/ohjelmoija/ylilauta-user-framework/master/ylilauta-user-framework.js
 // @require https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js
 // @resource highlightCSS https://gitcdn.xyz/repo/isagalaev/highlight.js/cf4b46e5b7acfe2626a07914e1d0d4ef269aed4a/src/styles/darcula.css
 // @grant GM_addStyle
@@ -20,8 +20,8 @@ function highlightCode() {
   });
 }
 
-const codeHighlighter = new Yliscript('Koodinväritys', function() {
+new Yliscript('Koodinväritys', function() {
   highlightCode();
-  this.listenNewReplies(() => highlightCode());
+}).listenNewReplies(() => {
+  highlightCode()
 });
-codeHighlighter.add();
