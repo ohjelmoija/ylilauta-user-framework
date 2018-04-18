@@ -63,6 +63,6 @@ function addButton() {
   $('.buttons_right').prepend(downloadAllButton);
 }
 
-new Yliscript('"Lataa kaikki" -nappi', function() {
+new Yliscript('"Lataa kaikki" -nappi', () => {
   addButton();
 });
