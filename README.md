@@ -3,8 +3,10 @@
 Kehikko, jonka tarkoituksena on auttaa Ylilaudalle käyttäjäskriptien tekijöitä keskittymään ominaisuuksien luontiin.
 
 ## Käyttö
+
 YUF on helppo ottaa käyttöön seuraavalla tavalla.
-```
+
+```js
 // ==UserScript==
 // @name Ylilauta: Käyttäjäskriptini
 // @namespace Violentmonkey Scripts
@@ -18,16 +20,18 @@ new Yliscript('Käyttäjäskriptini', () => {
   console.log('Tämä on ensimmäinen käyttäjäskriptini');
 });
 ```
+
 Huomaa `@require` -rivi, jossa YUF haetaan käyttöön.
 
 `Yliscript`-luokkaan liittyy myös metodeja, jotka helpottavat skriptien luomista.
-```
+
+```js
 function alertUserOnNewReplies() {
   alert('Uusia viestejä on saapunut');
 }
 
 new Yliscript('Käyttäjäskriptini', () => {
-  alert('Sivu on ladattu.')
+  alert('Sivu on ladattu.');
 }).listenNewReplies(() => {
   alertUserOnNewReplies();
 });
@@ -35,7 +39,7 @@ new Yliscript('Käyttäjäskriptini', () => {
 
 Skriptejä ei kannata selvyyden vuoksi koodata suoraan Yliscript-luokan sisälle, vaan kannattaa luoda funktio, jonka Yliscript ajaa.
 
-```
+```js
 function breakEverything() {
   $('body').html('');
 }
