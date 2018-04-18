@@ -1,7 +1,7 @@
 const LOCALSTORAGE_KEY = 'ylilauta-userscripts-pack';
 
 // eslint-disable-next-line no-unused-vars
-export class Yliscript {
+class Yliscript {
   constructor(scriptName, main) {
     this.scriptName = scriptName;
 
