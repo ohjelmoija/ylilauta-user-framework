@@ -20,8 +20,6 @@ function highlightCode() {
   });
 }
 
-new Yliscript('Koodinväritys', function() {
+new Yliscript('Koodinväritys', () => {
   highlightCode();
-}).listenNewReplies(() => {
-  highlightCode();
-});
+}).listenNewReplies(() => highlightCode());

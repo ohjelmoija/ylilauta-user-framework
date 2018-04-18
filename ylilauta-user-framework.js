@@ -4,9 +4,8 @@ const LOCALSTORAGE_KEY = 'ylilauta-userscripts-pack';
 class Yliscript {
   constructor(scriptName, main) {
     this.scriptName = scriptName;
-    this.main = main;
 
-    this._run();
+    this._run(main);
   }
 
   listenNewReplies(callback) {
@@ -17,12 +16,12 @@ class Yliscript {
     }
   }
 
-  _run() {
-    if (!this.main) {
+  _run(main) {
+    if (!main) {
       return this._error(
         `Skriptiä <${
           this.scriptName
-        }> ei ladattu! Lue esimerkit: http://ohjelmoija.github.io/ylilauta-userscripts-pack/`
+        }> ei ladattu! Lue esimerkit: http://github.com/ohjelmoija/ylilauta-user-framework/`
       );
     }
 
@@ -32,12 +31,12 @@ class Yliscript {
       this._addToPreferences();
     }
 
-    this._runScript();
+    this._runScript(main);
   }
 
-  _runScript() {
+  _runScript(main) {
     if (this._isScriptEnabled()) {
-      this.main();
+      main();
     }
   }
 
