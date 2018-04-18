@@ -1,14 +1,22 @@
+import { $, switch_preferences_tab } from 'yboard';
+
 const LOCALSTORAGE_KEY = 'ylilauta-userscripts-pack';
 
-// eslint-disable-next-line no-unused-vars
+interface Script {
+  name: string;
+  enabled: boolean;
+}
+
 export class Yliscript {
-  constructor(scriptName, main) {
+  public scriptName: string;
+
+  constructor(scriptName: string, main: () => void) {
     this.scriptName = scriptName;
 
-    this._run(main);
+    this.run(main);
   }
 
-  listenNewReplies(callback) {
+  public listenNewReplies(callback: MutationCallback) {
     const observer = new MutationObserver(callback);
 
     if ($('.answers')[0]) {
@@ -16,9 +24,9 @@ export class Yliscript {
     }
   }
 
-  _run(main) {
+  private run(main: () => void) {
     if (!main) {
-      return this._error(
+      return this.error(
         `Skriptiä <${
           this.scriptName
         }> ei ladattu! Lue esimerkit: http://github.com/ohjelmoija/ylilauta-user-framework/`
@@ -28,35 +36,33 @@ export class Yliscript {
     const currentUrl = window.location.href;
 
     if (currentUrl.includes('/preferences?')) {
-      this._addToPreferences();
+      this.addToPreferences();
     }
 
-    this._runScript(main);
-  }
-
-  _runScript(main) {
-    if (this._isScriptEnabled()) {
+    if (this.isScriptEnabled()) {
       main();
     }
   }
 
-  _isScriptEnabled() {
-    if (!this._isStorageCreated()) {
-      this._createStorage();
+  private isScriptEnabled() {
+    const storage = localStorage.getItem(LOCALSTORAGE_KEY);
+
+    if (!storage) {
+      this.createStorage();
 
       return true;
     }
 
-    const script = this._getScriptFromStorage();
+    const script = this.getScriptFromStorage(storage);
     if (!script) {
-      this._addScriptToStorage();
+      this.addScriptToStorage(storage);
       return true;
     }
 
     return script.enabled;
   }
 
-  _getScriptFromStorage() {
+  private getScriptFromStorage(storage: string) {
     /* * * Storage: * * *
     ylilauta-userscripts-pack: JSON.stringify([
       {
@@ -67,12 +73,10 @@ export class Yliscript {
       ...,
     ]);
     */
-    const storage = localStorage.getItem(LOCALSTORAGE_KEY);
-
     const scripts = JSON.parse(storage);
 
     const scriptsWithThisName = scripts.filter(
-      script => script.name === this.scriptName
+      (script: Script) => script.name === this.scriptName
     );
 
     if (scriptsWithThisName.length === 0) {
@@ -82,17 +86,11 @@ export class Yliscript {
     return scriptsWithThisName[0];
   }
 
-  _isStorageCreated() {
-    const storage = localStorage.getItem(LOCALSTORAGE_KEY);
-
-    return !!storage;
-  }
-
-  _createStorage() {
+  private createStorage() {
     const scriptData = [
       {
-        name: this.scriptName,
-        enabled: true
+        enabled: true,
+        name: this.scriptName
       }
     ];
 
@@ -100,21 +98,25 @@ export class Yliscript {
     localStorage.setItem(LOCALSTORAGE_KEY, scriptToJson);
   }
 
-  _addScriptToStorage() {
-    const storage = localStorage.getItem(LOCALSTORAGE_KEY);
+  private addScriptToStorage(storage: string) {
     const scripts = JSON.parse(storage);
     scripts.push({
-      name: this.scriptName,
-      enabled: true
+      enabled: true,
+      name: this.scriptName
     });
     const scriptsToString = JSON.stringify(scripts);
     localStorage.setItem(LOCALSTORAGE_KEY, scriptsToString);
   }
 
-  _toggleScriptStorage(value) {
+  private toggleScriptStorage(value: boolean) {
     const storage = localStorage.getItem(LOCALSTORAGE_KEY);
+
+    if (storage === null) {
+      return;
+    }
+
     const scripts = JSON.parse(storage);
-    const newScripts = scripts.map(script => {
+    const newScripts = scripts.map((script: Script) => {
       const newScript = script;
       newScript.enabled = value;
 
@@ -125,14 +127,14 @@ export class Yliscript {
     localStorage.setItem(LOCALSTORAGE_KEY, newScriptsToString);
   }
 
-  _addToPreferences() {
+  private addToPreferences() {
     if (!$('li[data-tabid="userscripts"]').get(0)) {
-      this._addPreferenceTab();
+      this.addPreferenceTab();
     }
 
     if (!$('div.preferences>#userscripts').get(0)) {
-      this._addPreferenceWrapper();
-      this._loaded();
+      this.addPreferenceWrapper();
+      this.loaded();
     }
 
     if (
@@ -140,23 +142,23 @@ export class Yliscript {
         `#userscripts>div.script>span.name:contains("${this.scriptName}")`
       ).get(0)
     ) {
-      this._addScriptToWrapper();
+      this.addScriptToWrapper();
     }
   }
 
-  _addPreferenceTab() {
+  private addPreferenceTab() {
     const preferenceTab = $(
       '<li class="tab" data-tabid="userscripts">Käyttäjäskriptit</li>'
     );
-    preferenceTab.on('click', function() {
-      // eslint-disable-next-line no-undef, yboard.js defined
-      switch_preferences_tab($(this).data('tabid'), true);
+    // tslint:disable-next-line:no-any
+    preferenceTab.on('click', (event: any) => {
+      switch_preferences_tab($(event.currentTarget).data('tabid'), true);
     });
 
     $('#tabchooser li:last-child').before(preferenceTab);
   }
 
-  _addPreferenceWrapper() {
+  private addPreferenceWrapper() {
     const preferenceWrapper = $(
       `<div id="userscripts" class="tab" style="display: none">
         <h3>JavaScript-käyttäjäskriptit</h3>
@@ -167,7 +169,7 @@ export class Yliscript {
     $('div.preferences>#sessions').after(preferenceWrapper);
   }
 
-  _addScriptToWrapper() {
+  private addScriptToWrapper() {
     const scriptBox = $(
       `<div class="script">
         <span class="name">
@@ -179,16 +181,19 @@ export class Yliscript {
     const checkBox = $(
       `<input
         type="checkbox"
-        ${this._isScriptEnabled() ? 'checked' : ''}
+        ${this.isScriptEnabled() ? 'checked' : ''}
       />`
-    ).change(event => this._toggleScriptStorage(event.currentTarget.checked));
+      // tslint:disable-next-line:no-any
+    ).change((event: any) =>
+      this.toggleScriptStorage(event.currentTarget.checked)
+    );
 
     const script = $(scriptBox).prepend(checkBox);
 
     $('#userscripts').append(script);
   }
 
-  _error(message = 'Virhe!') {
+  private error(message = 'Virhe!') {
     console.error(
       '%c    Ylilauta.fi: pack     ',
       'background: #000; color: #0f0',
@@ -196,7 +201,7 @@ export class Yliscript {
     );
   }
 
-  _loaded() {
+  private loaded() {
     console.log(
       '%c Ylilauta.fi: pack loaded ',
       'background: #000; color: #0f0'
