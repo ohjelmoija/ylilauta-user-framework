@@ -11,7 +11,7 @@ YUF on helppo ottaa käyttöön seuraavalla tavalla.
 // @name Ylilauta: Käyttäjäskriptini
 // @namespace Violentmonkey Scripts
 // @match *://ylilauta.org/*
-// @require https://cdn.rawgit.com/ohjelmoija/ylilauta-user-framework/master/ylilauta-user-framework.js
+// @require https://cdn.rawgit.com/ohjelmoija/ylilauta-user-framework/master/src/ylilauta-user-framework.js
 // @version 0.1
 // @description Demonstraatio
 // ==/UserScript==
