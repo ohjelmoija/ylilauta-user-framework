@@ -8,6 +8,9 @@
 
 # production
 # /build
+/user_dev
+/userscripts_dev
+.vscode
 
 # misc
 .DS_Store

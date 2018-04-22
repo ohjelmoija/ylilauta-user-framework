@@ -5,43 +5,50 @@ class Yliscript {
   constructor(scriptName, main) {
     this.scriptName = scriptName;
 
-    this._run(main);
+    if (main) {
+      this.main = main;
+    } else {
+      this.main = () => {
+        this._noScriptError();
+      }
+    }
+
+    this._run();
   }
 
   listenNewReplies(callback) {
-    const observer = new MutationObserver(callback);
+    const observer = new MutationObserver(mutations => {
+      if (mutations[0]) {
+        const newReplies = [...mutations[0].addedNodes].filter(node =>
+          $(node).hasClass('answer')
+        );
+
+        if (newReplies.length > 0) {
+          // Gives an array of new replies to callback
+          callback(newReplies);
+        }
+      }
+    });
 
     if ($('.answers')[0]) {
       observer.observe($('.answers')[0], { childList: true });
     }
+
+    return this;
   }
 
-  _run(main) {
-    if (!main) {
-      return this._error(
-        `Skriptiä <${
-          this.scriptName
-        }> ei ladattu! Lue esimerkit: http://github.com/ohjelmoija/ylilauta-user-framework/`
-      );
-    }
+  _run() {
+    this._addToPreferences();
 
-    const currentUrl = window.location.href;
-
-    if (currentUrl.includes('/preferences?')) {
-      this._addToPreferences();
-    }
-
-    this._runScript(main);
-  }
-
-  _runScript(main) {
     if (this._isScriptEnabled()) {
-      main();
+      this.main();
     }
   }
 
   _isScriptEnabled() {
-    if (!this._isStorageCreated()) {
+    const isStorageCreated = !!localStorage.getItem(LOCALSTORAGE_KEY);
+
+    if (!isStorageCreated) {
       this._createStorage();
       return true;
     }
@@ -81,12 +88,6 @@ class Yliscript {
     return scriptsWithThisName[0];
   }
 
-  _isStorageCreated() {
-    const storage = localStorage.getItem(LOCALSTORAGE_KEY);
-
-    return !!storage;
-  }
-
   _createStorage() {
     const scriptData = [
       {
@@ -106,6 +107,7 @@ class Yliscript {
       name: this.scriptName,
       enabled: true
     });
+    
     const scriptsToString = JSON.stringify(scripts);
     localStorage.setItem(LOCALSTORAGE_KEY, scriptsToString);
   }
@@ -125,6 +127,12 @@ class Yliscript {
   }
 
   _addToPreferences() {
+    const currentUrl = window.location.href;
+
+    if (!currentUrl.includes('/preferences?')) {
+      return;
+    }
+
     if (!$('li[data-tabid="userscripts"]').get(0)) {
       this._addPreferenceTab();
     }
@@ -185,6 +193,14 @@ class Yliscript {
     const script = $(scriptBox).prepend(checkBox);
 
     $('#userscripts').append(script);
+  }
+
+  _noScriptError() {
+    return this._error(
+      `Skriptiä <${
+        this.scriptName
+      }> ei ladattu! Lue esimerkit: http://github.com/ohjelmoija/ylilauta-user-framework/`
+    );
   }
 
   _error(message = 'Virhe!') {
