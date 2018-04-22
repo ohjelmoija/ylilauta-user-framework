@@ -22,6 +22,4 @@ function highlightCode() {
 
 new Yliscript('Koodinväritys', () => {
   highlightCode();
-})
-  .listenNewReplies(() => highlightCode())
-  ._doSomething();
+}).listenNewReplies(() => highlightCode());
